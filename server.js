@@ -20,6 +20,7 @@ app.use(express.urlencoded({extended:true}));
 //routes
 
 app.get('/', getHomePage);
+app.get('/searches/new', displaySearch);
 
 function getHomePage(request,response){
   //getting home page
@@ -30,7 +31,10 @@ function getHomePage(request,response){
 
 
 
-
+function displaySearch(request, response){
+  //display search page
+  response.status(200).render('./pages/searches/new')
+}
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
 
