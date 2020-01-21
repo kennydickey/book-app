@@ -1,9 +1,9 @@
-Number and name of feature: ________________________________
+Number and name of feature: 11
 
-Estimate of time needed to complete: _____
+Estimate of time needed to complete: 4.5 hrs
 
-Start time: _____
+Start time: 0930
 
-Finish time: _____
+Finish time: 0200
 
-Actual time needed to complete: _____
+Actual time needed to complete: 4.5 hrs
