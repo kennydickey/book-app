@@ -1,66 +1,98 @@
 'use strict';
 
+//dependancies
 const express = require('express')
+const pg = require('pg')
 const superagent = require('superagent');
+
+//environment variables
 require ('dotenv').config();
 require('ejs');
-// const pg = require('pg')
 
+//application setup
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+//database setup
+const client = new pg.Client(process.env.DATABASE_URL) //make sure to declare in .env
+client.connect(); //from demo
+client.on('error', err => console.error(err));
+
+//express middleware
+//body-parser
+app.use(express.urlencoded({extended:true}));
+app.use(express.static('./public'));
 
 //setting up view engine
 app.set('view engine', 'ejs');
 
-app.use(express.static('./public'));
+//from demo
+// app.get('/', getBooks);
 
-//body-parser
-app.use(express.urlencoded({extended:true}));
+// function getBooks(request, response) {
+//   let SQL = 'SELECT * FROM books;';
+//   client.query(SQL)
+//     .then(results => {
+//       response.status(200).send(results);
+//     })
+// }
+
+
+
 
 //routes
-
 app.get('/', getHomePage);
 app.get('/searches/new', displaySearch);
 app.post('/searches/new', collectBookSearchData);
+app.get('/error', displayError);
 
 // client.on('error', err => console.error(err));
 
 
 function getHomePage(request,response){
+  //go to database, get all of the saved books and display
   //getting home page
   response.status(200).render('index');
 }
-
-
-
 function displaySearch(request, response){
   //display search page
-  response.status(200).render('./pages/searches/new')
+  response.render('pages/searches/new');
 }
+function displayError(request, response){
+  response.status(400).render('pages/error');
+}
+// function showResult(request, response){
+//   response.status()
+// }
+
 function collectBookSearchData(request,response){
-  console.log(request.body)
-  let searchWord = request.body.search[0] //harry potter
-  let searchType = request.body.search[1] //title
+  // console.log(request.body)
+  let searchWord = request.body.search[0]; //harry potter
+  let searchType = request.body.search[1]; //title
+
 
   let url = `https://www.googleapis.com/books/v1/volumes?q=`;
 
   if(searchType === 'title' ){
-    url += `+intitle:${searchWord}`
-  } else {
+    url += `+intitle:${searchWord}`;
+  }
+  if(searchType === 'author') {
     url += `+inauthor:${searchWord}`;
   }
+
 
   superagent.get(url)
     .then(agentResults => {
       //agentResults.body returns everything
       let bookArray = agentResults.body.items;
-      console.log(agentResults.body.items[0].volumeInfo.authors[0])
-      const betterBookArray = bookArray.map(book => new Book(book.volumeInfo))
-      
-      
-      
-      response.status(200).send(betterBookArray)
+      // console.log(agentResults.body.items[0].volumeInfo.authors[0])
+      return bookArray.map(book => new Book(book.volumeInfo))
+      // const singleBookArray = betterBookArray[0].title;
+      // response.status(200).send(a);
     })
+    //results of bookarray.map
+    .then(results => response.render('pages/searches/show', { results: results }))
+
     .catch((error) => console.log('this does not work, heres why: ', error));
 
 }
@@ -68,22 +100,25 @@ function collectBookSearchData(request,response){
 
 function Book(obj){
   // const placeholderImage = 'https://i.imgur.com/J5LVHEL.jpg';
-  this.title = obj.title || 'No title available';
-  this.authors = obj.authors || 'No author available';
-  this.description = obj.description || 'No description available';
-  this.publisheddate = obj.publishedDate || 'no publish date available';
+  // this.title = obj.title || 'No title available';
+  //same below with if else ternary vv
+  obj.title !== undefined ? this.title = obj.title : this.title = 'no title available'
+  // this.authors = obj.authors || 'No author available';
+  obj.authors !== undefined ? this.authors = obj.authors : this.authors = 'no authors available'
+  // this.description = obj.description || 'No description available';
+  obj.description !== undefined ? this.description = obj.description : this.description = 'no description available'
+  // this.publisheddate = obj.publishedDate || 'no publish date available';
+  obj.publisheddate !== undefined ? this.publisheddate = obj.publisheddate : this.publisheddate = 'no publisheddate available'
+
 }
 
 
-app.listen(PORT, () => console.log(`listening on ${PORT}`));
 
-
-
-app.get('*', (req, res) => 
+app.get('*', (req, res) =>
   res.status(404).send('this route does not exist')
 );
 
-
+app.listen(PORT, () => console.log(`listening on ${PORT}`));
 
 
 

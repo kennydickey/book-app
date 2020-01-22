@@ -7,10 +7,13 @@
   <title>Book Collection</title>
 </head>
 <body>
-  <main>
-    <% searchResults.forEach( book => { %>
-      <h3><%= book.title %></h3>
+  <ul>
+    <% results.forEach(book => { %>
+      <li><%= book.title %></li>
+      <li><%= book.authors %></li>
+      <li><%= book.description %></li>
+      <img src='<%= book.Image %>' alt='<%= book.title %>'></img>
     <% }) %>
-  </main>
+  </ul>
 </body>
 </html>
