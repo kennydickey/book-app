@@ -5,13 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Book Collection</title>
+  <link rel="stylesheet" href="../styles/reset.css">
+  <link rel="stylesheet" href="../styles/base.css">
 </head>
 <body>
   <ul>
     <% results.forEach(book => { %>
-      <li><%= book.title %></li>
-      <li><%= book.authors %></li>
-      <li><%= book.description %></li>
+      <li class="lititle"><%= book.title %></li>
+      <li class="liauthor"><%= book.authors %></li>
+      <li class="lidescription"><%= book.description %></li>
       <img src='<%= book.bookImage %>' alt='<%= book.title %>'></img>
     <% }) %>
   </ul>
