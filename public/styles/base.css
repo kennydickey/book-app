@@ -1,8 +1,80 @@
 *{
-  color: red;
+  background-color: grey;
+}
+
+
+ul{
+  background-color: lightgrey;
+  padding: 20px;
+  margin: 10px;
+}
+
+h1{
+  color: white;
+}
+
+div{
+  text-align: center;
 }
 
 main {
-  background-color: cadetblue;
+  background-color: lightgrey;
+  
 }
+
+header{
+  background-color: black;
+  color: white;
+  text-align: center;
+}
+
+.bookimage{
+
+  padding: 100px;
+}
+
+#searchbutton{
+  background-color: lightskyblue;
+}
+
+.title{
+  color: rgb(80, 27, 82);
+}
+
+.bookdescription{
+  background-color: seashell;
+  margin: 30px;
+  padding: 10px;
+}
+
+.lititle{
+  text-align: center;
+  background-color: lightyellow;
+}
+
+.liauthor{
+  text-align: center;
+  background-color: lightyellow;
+}
+
+.lidescription{
+  text-align: center;
+  background-color: lightyellow;
+  padding: 10px;
+  margin: 20px;
+}
+
+footer{
+  background-color: black;
+  color: white;
+  text-align: center;
+  height: 100px;
+}
+
+img{
+  margin-left: 100px;
+  width: 300px;
+}
+
+
 
