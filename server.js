@@ -87,8 +87,6 @@ function collectBookSearchData(request,response){
       let bookArray = agentResults.body.items;
       // console.log(agentResults.body.items[0].volumeInfo.authors[0])
       return bookArray.map(book => new Book(book.volumeInfo))
-      // const singleBookArray = betterBookArray[0].title;
-      // response.status(200).send(a);
     })
     //results of bookarray.map
     .then(results => response.render('pages/searches/show', { results: results }))
@@ -100,14 +98,18 @@ function collectBookSearchData(request,response){
 
 function Book(obj){
   // const placeholderImage = 'https://i.imgur.com/J5LVHEL.jpg';
-  // this.title = obj.title || 'No title available';
   //same below with if else ternary vv
+  // this.bookImage = obj.imageLinks;
+
+  obj.imagelinks !== undefined ? this.bookImage = obj.imageLinks.thumbnail.replace('http:', 'https:') : this.bookImage = obj.imageLinks.thumbnail;
+  //|| 'https://i.imgur.com/J5LVHEL.jpg';
+
   obj.title !== undefined ? this.title = obj.title : this.title = 'no title available'
-  // this.authors = obj.authors || 'No author available';
+
   obj.authors !== undefined ? this.authors = obj.authors : this.authors = 'no authors available'
-  // this.description = obj.description || 'No description available';
+
   obj.description !== undefined ? this.description = obj.description : this.description = 'no description available'
-  // this.publisheddate = obj.publishedDate || 'no publish date available';
+
   obj.publisheddate !== undefined ? this.publisheddate = obj.publisheddate : this.publisheddate = 'no publisheddate available'
 
 }
