@@ -2,8 +2,10 @@
 
 //dependancies
 const express = require('express')
-const pg = require('pg')
+const pg = require('pg');
+// const cors = require('cors');
 const superagent = require('superagent');
+
 
 //environment variables
 require ('dotenv').config();
@@ -29,23 +31,24 @@ app.set('view engine', 'ejs');
 //from demo
 // app.get('/', getBooks);
 
-// function getBooks(request, response) {
-//   let SQL = 'SELECT * FROM books;';
-//   client.query(SQL)
-//     .then(results => {
-//       response.status(200).send(results);
-//     })
-// }
+function getBooks(request, response) {
+  let SQL = 'SELECT * FROM books;';
+  client.query(SQL)
+    .then(results => {
+      response.status(200).send(results);
+    })
+}
 
-
+// app.use(cors());
 
 
 //routes
-app.get('/', getHomePage);
+app.get('/', getHomePage); //refactor to retrieve arr of obj from db and render
 app.get('/searches/new', displaySearch);
 app.post('/searches/new', collectBookSearchData);
 app.get('/error', displayError);
-
+app.get('/show', showResult);
+app.post('/book', addingToDataBase)
 // client.on('error', err => console.error(err));
 
 
@@ -61,9 +64,23 @@ function displaySearch(request, response){
 function displayError(request, response){
   response.status(400).render('pages/error');
 }
-// function showResult(request, response){
-//   response.status()
-// }
+function showResult(request, response){
+  response.status(200).render('pages/searches/show');
+}
+
+function addingToDataBase( request, response){
+  console.log(request.body);
+  let {author, title, description} = request.body;
+  console.log('addingToDataBase');
+  // write sql statement to add request.body to db
+  let SQL = 'INSERT INTO books (author, title, description) VALUES ($1, $2, $3);';
+  let safeValues = [author, title, description]
+  //return id from database
+  client.query(SQL, safeValues);
+  //make anothe sql query to go into database using the same id
+  response.redirect('/');
+  //redirect to detail page qith the id
+}
 
 function collectBookSearchData(request,response){
   // console.log(request.body)
@@ -111,6 +128,8 @@ function Book(obj){
   obj.description !== undefined ? this.description = obj.description : this.description = 'no description available'
 
   obj.publisheddate !== undefined ? this.publisheddate = obj.publisheddate : this.publisheddate = 'no publisheddate available'
+  
+  obj.isbn
 
 }
 
