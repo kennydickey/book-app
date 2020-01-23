@@ -11,11 +11,18 @@
 <body>
   <ul>
     <% results.forEach(book => { %>
+      <form action="/book" method="post">
+        <input type="text" name="title" value="<%= book.title %>">
       <li class="lititle"><%= book.title %></li>
+        <input type="text" name="authors" value="<%= book.authors %>">
       <li class="liauthor"><%= book.authors %></li>
       <li class="lidescription"><%= book.description %></li>
+        <input type="text" name="description" value="<%= book.description %>">
       <img src='<%= book.bookImage %>' alt='<%= book.title %>'></img>
+      <button>Add to Database</button>
+    </form>
     <% }) %>
+    <!--  -->
   </ul>
 </body>
 </html>
